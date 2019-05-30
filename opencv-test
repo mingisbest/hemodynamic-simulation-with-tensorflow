@@ -1,0 +1,23 @@
+import time
+
+import numpy as np
+import math 
+import cv2
+
+def make_car_boundary(shape, car_shape):
+  img = cv2.imread("./C/test2.jpg", 0)
+  img = cv2.flip(img, 1)
+  resized_img = cv2.resize(img, car_shape)
+  #resized_img = -np.rint(resized_img/255.0).astype(int).astype(np.float32) + 1.0
+  resized_img = -np.rint(resized_img/255.0)
+  print("rint",resized_img)
+  resized_img = resized_img.astype(int).astype(np.float32) + 1.0
+  print(resized_img)
+  resized_img = resized_img.reshape([1, car_shape[1], car_shape[0], 1])
+  print(resized_img)
+  boundary = np.zeros((1, shape[0], shape[1], 1), dtype=np.float32)
+  boundary[:, shape[0]-car_shape[1]:, :car_shape[0], :] = resized_img
+  boundary[:,0:,:,:] = 1.0
+  boundary[:,shape[0]-1,:,:] = 1.0
+  return boundary
+make_car_boundary([300, 2000],(3,10))
